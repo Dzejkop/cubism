@@ -8,6 +8,18 @@ use rand::{Rng, SeedableRng};
 // The buffer is 256x144 with this scale
 const SCALE: f32 = 7.5;
 
+const STREAK_SPEED: f32 = 1.0;
+
+const BUTTON_WIDTH: i32 = 160;
+const BUTTON_HEIGHT: i32 = 80;
+
+const BUTTON_OUTLINE_THICKNESS: i32 = 5;
+const CONTENT_OFFSET: i32 = 24;
+
+const STREAK_LENGTH: f32 = 20.0;
+
+const TRANSPARENT: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
+
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
@@ -27,15 +39,6 @@ fn main() {
 struct State {
     streaks: Vec<Streak>,
 }
-
-const STREAK_SPEED: f32 = 1.0;
-const BUTTON_WIDTH: i32 = 160;
-const BUTTON_HEIGHT: i32 = 80;
-
-const THICKNESS: i32 = 5;
-const CONTENT_OFFSET: i32 = 24;
-
-const STREAK_LENGTH: f32 = 20.0;
 
 impl Default for State {
     fn default() -> Self {
@@ -68,7 +71,7 @@ struct MinecraftFont(ab_glyph::FontArc);
 fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>, windows: Res<Windows>) {
     commands.spawn(Camera2dBundle::default());
 
-    // We could also use assets
+    // We could also use assets, but this is simpler
     let font_data = include_bytes!("../fonts/Minecraft.ttf");
     let font = ab_glyph::FontArc::try_from_slice(font_data).unwrap();
     commands.insert_resource(MinecraftFont(font));
@@ -96,6 +99,9 @@ fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>, windows: Res
     ui_image.sampler_descriptor = ImageSampler::nearest();
     let ui_image = images.add(ui_image);
 
+    // This is the image we'll use as canvas.
+    // Note that if you have multiple images, you'll want to mark this entity with some marker component
+    // or save the entity id in some resource.
     commands.spawn(SpriteBundle {
         texture: ui_image,
         transform: Transform::from_xyz(0.0, 0.0, 1.0).with_scale(Vec3::ONE * SCALE),
@@ -104,8 +110,6 @@ fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>, windows: Res
 
     commands.insert_resource(State::default());
 }
-
-const TRANSPARENT: Color = Color::rgba(0.0, 0.0, 0.0, 0.0);
 
 fn render(
     time: Res<Time>,
@@ -136,7 +140,7 @@ fn render(
         offset_y,
         BUTTON_WIDTH,
         BUTTON_HEIGHT,
-        THICKNESS,
+        BUTTON_OUTLINE_THICKNESS,
     );
 
     for streak in &mut state.streaks {
@@ -149,10 +153,10 @@ fn render(
     draw_rect_highlight(
         t,
         &mut canvas,
-        offset_x - THICKNESS,
-        offset_y - THICKNESS,
-        BUTTON_WIDTH + (THICKNESS * 2),
-        BUTTON_HEIGHT + (THICKNESS * 2),
+        offset_x - BUTTON_OUTLINE_THICKNESS,
+        offset_y - BUTTON_OUTLINE_THICKNESS,
+        BUTTON_WIDTH + (BUTTON_OUTLINE_THICKNESS * 2),
+        BUTTON_HEIGHT + (BUTTON_OUTLINE_THICKNESS * 2),
     );
 
     draw_button_content(&mut canvas, offset_x, offset_y, BUTTON_WIDTH, BUTTON_HEIGHT);
