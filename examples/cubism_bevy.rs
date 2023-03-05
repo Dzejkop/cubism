@@ -94,7 +94,7 @@ fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>, windows: Res
         ui_size,
         TextureDimension::D2,
         data,
-        TextureFormat::Rgba8UnormSrgb,
+        TextureFormat::Rgba8Unorm,
     );
     ui_image.sampler_descriptor = ImageSampler::nearest();
     let ui_image = images.add(ui_image);
@@ -197,8 +197,9 @@ fn draw_streak(canvas: &mut impl Canvas, offset_x: i32, offset_y: i32, streak: &
         .fill_color(TRANSPARENT)
         .outline_color(Color::WHITE);
 
-    let streak_start = f(streak.progress, 0.3);
-    let streak_end = f(streak.progress, 0.7);
+    let streak_offset: f32 = 0.3;
+    let streak_start = f(streak.progress, 0.5 + streak_offset);
+    let streak_end = f(streak.progress, 0.5 - streak_offset);
 
     let x = streak.x as f32;
     let y = streak.y as f32;

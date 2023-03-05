@@ -1,6 +1,6 @@
 [package]
 name = "cubism"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Dzejkop <jakubtrad@gmail.com>"]
 edition = "2021"
 description = "A basic pixel canvas for Rust"
@@ -17,9 +17,14 @@ keywords = [
     "canvas",
 ]
 
+[features]
+default = [ "bevy_color" ]
+bevy_color = [ "bevy" ]
+
 [dependencies]
-bevy = "0.9"
+bevy = { version = "0.9", optional = true }
 ab_glyph = "0.2"
 
 [dev-dependencies]
+bevy = "0.9"
 rand = "0.8"

@@ -1,7 +1,6 @@
-use bevy::prelude::Color;
-
 use self::shape::Shape;
 use crate::Blit;
+use crate::Color;
 
 pub mod blit;
 pub mod shape;

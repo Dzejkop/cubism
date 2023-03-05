@@ -1,6 +1,5 @@
-use bevy::prelude::Color;
-
 use crate::canvas::Canvas;
+use crate::Color;
 
 pub struct PixelBuffer<'a> {
     pub width: i32,

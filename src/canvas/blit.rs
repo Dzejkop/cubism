@@ -1,6 +1,4 @@
-use bevy::prelude::Color;
-
-use crate::Canvas;
+use crate::{Canvas, Color};
 
 pub struct Blit<'a, C> {
     canvas: &'a mut C,

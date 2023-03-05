@@ -8,6 +8,5 @@ A basic Rust pixel canvas library.
 ```
 
 # TODO:
-1. [ ] Remove `bevy` dependency (only uses `Color` can be feature gated maybe?)
-2. [ ] Better text rendering (size, scale, spacing (?), etc.)
-3. [ ] Text layouting before rendering (for positioning)
+1. [ ] Better text rendering (size, scale, spacing (?), etc.)
+2. [ ] Text layouting before rendering (for positioning)

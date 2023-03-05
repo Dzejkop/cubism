@@ -1,7 +1,6 @@
 use ab_glyph::{point, Font, Glyph, Point, PxScale, ScaleFont};
-use bevy::prelude::Color;
 
-use crate::Canvas;
+use crate::{Canvas, Color};
 
 pub struct TextCanvas<'a, T, F> {
     canvas: T,
