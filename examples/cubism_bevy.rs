@@ -180,10 +180,7 @@ fn draw_thick_rect_outline(
     h: i32,
     thickness: i32,
 ) {
-    let mut shape = canvas
-        .shape()
-        .fill_color(Color::WHITE)
-        .outline_color(TRANSPARENT);
+    let mut shape = canvas.shape().fill(Color::WHITE).outline(TRANSPARENT);
 
     shape.rect(x - thickness, y - thickness, x + w + thickness, y);
     shape.rect(x - thickness, y + h, x + w + thickness, y + h + thickness);
@@ -192,10 +189,7 @@ fn draw_thick_rect_outline(
 }
 
 fn draw_streak(canvas: &mut impl Canvas, offset_x: i32, offset_y: i32, streak: &Streak) {
-    let mut shape = canvas
-        .shape()
-        .fill_color(TRANSPARENT)
-        .outline_color(Color::WHITE);
+    let mut shape = canvas.shape().fill(TRANSPARENT).outline(Color::WHITE);
 
     let streak_offset: f32 = 0.3;
     let streak_start = f(streak.progress, 0.5 + streak_offset);
@@ -241,10 +235,7 @@ fn draw_rect_highlight(time: f32, canvas: &mut impl Canvas, x: i32, y: i32, w: i
     const OFFSET: i32 = 3;
     const L: i32 = 6;
 
-    let mut shape = canvas
-        .shape()
-        .fill_color(TRANSPARENT)
-        .outline_color(Color::WHITE);
+    let mut shape = canvas.shape().fill(TRANSPARENT).outline(Color::WHITE);
 
     {
         let x = x - OFFSET;
@@ -279,10 +270,7 @@ fn draw_rect_highlight(time: f32, canvas: &mut impl Canvas, x: i32, y: i32, w: i
 }
 
 fn draw_button_content(canvas: &mut impl Canvas, x: i32, y: i32, w: i32, h: i32) {
-    let mut shape = canvas
-        .shape()
-        .fill_color(Color::BLACK)
-        .outline_color(TRANSPARENT);
+    let mut shape = canvas.shape().fill(Color::BLACK).outline(TRANSPARENT);
 
     let sx = x + CONTENT_OFFSET;
     let sy = y + CONTENT_OFFSET;

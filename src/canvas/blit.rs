@@ -13,6 +13,27 @@ pub struct Blit<'a, C> {
     mul_color: Color,
 }
 
+#[cfg(feature = "bevy_ext")]
+impl<'a, C> Blit<'a, C> {
+    pub fn bevy_image(mut self, image: &'a bevy::prelude::Image) -> Self {
+        use bevy::render::render_resource::TextureFormat;
+
+        self.img_data = &image.data;
+        let stride_mul = match image.texture_descriptor.format {
+            TextureFormat::Rgba8Unorm => 1,
+            TextureFormat::Rgba8UnormSrgb => 1,
+            unsupported => panic!("Unsupported texture format: {unsupported:?}!",),
+        };
+
+        self.img_stride = stride_mul * image.size().x as usize;
+
+        self.src_w = image.size().x as i32;
+        self.src_h = image.size().y as i32;
+
+        self
+    }
+}
+
 impl<'a, C> Blit<'a, C> {
     pub fn new(canvas: &'a mut C) -> Self {
         Self {
@@ -75,8 +96,6 @@ where
     C: Canvas,
 {
     pub fn finish(self) {
-        let (dst_w, dst_h) = self.canvas.size();
-
         let sampler = BlitSampler::new(self.img_data, self.img_stride as i32);
 
         let mul_color = self.mul_color.as_rgba_f32();
@@ -86,14 +105,10 @@ where
                 let src_x = self.src_x + x;
                 let src_y = self.src_y + y;
 
-                if src_x < 0 || src_x >= dst_w || src_y < 0 || src_y >= dst_h {
-                    continue;
-                }
-
                 let dst_x = self.dst_x + x;
                 let dst_y = self.dst_y + y;
 
-                let color = sampler.sample(x, y);
+                let color = sampler.sample(src_x, src_y);
                 let color = color * mul_color;
 
                 self.canvas.set(dst_x, dst_y, color);
@@ -104,16 +119,16 @@ where
 
 struct BlitSampler<'a> {
     img_data: &'a [u8],
-    width: i32,
+    stride: i32,
 }
 
 impl<'a> BlitSampler<'a> {
-    fn new(img_data: &'a [u8], width: i32) -> Self {
-        Self { img_data, width }
+    fn new(img_data: &'a [u8], stride: i32) -> Self {
+        Self { img_data, stride }
     }
 
     fn sample(&self, x: i32, y: i32) -> Color {
-        let index = (y * self.width + x) as usize * 4;
+        let index = (y * self.stride + x) as usize * 4;
 
         if index >= self.img_data.len() {
             return Color::rgba_u8(0, 0, 0, 0);

@@ -18,8 +18,8 @@ keywords = [
 ]
 
 [features]
-default = [ "bevy_color" ]
-bevy_color = [ "bevy" ]
+default = [ "bevy_ext" ]
+bevy_ext = [ "bevy" ]
 
 [dependencies]
 bevy = { version = "0.9", optional = true }

@@ -2,34 +2,34 @@ use crate::{Canvas, Color};
 
 pub struct Shape<'a, C> {
     canvas: &'a mut C,
-    fill_color: Color,
-    outline_color: Color,
+    fill: Color,
+    outline: Color,
 }
 
 impl<'a, C> Shape<'a, C> {
     pub fn new(canvas: &'a mut C) -> Self {
         Self {
             canvas,
-            fill_color: Color::WHITE,
-            outline_color: Color::rgba(0.0, 0.0, 0.0, 0.0),
+            fill: Color::WHITE,
+            outline: Color::rgba(0.0, 0.0, 0.0, 0.0),
         }
     }
-    pub fn fill_color(mut self, color: Color) -> Self {
-        self.fill_color = color;
+    pub fn fill(mut self, color: Color) -> Self {
+        self.fill = color;
         self
     }
 
-    pub fn set_fill_color(&mut self, color: Color) {
-        self.fill_color = color;
+    pub fn set_fill(&mut self, color: Color) {
+        self.fill = color;
     }
 
-    pub fn outline_color(mut self, color: Color) -> Self {
-        self.outline_color = color;
+    pub fn outline(mut self, color: Color) -> Self {
+        self.outline = color;
         self
     }
 
-    pub fn set_outline_color(&mut self, color: Color) {
-        self.outline_color = color;
+    pub fn set_outline(&mut self, color: Color) {
+        self.outline = color;
     }
 }
 
@@ -40,26 +40,26 @@ where
     pub fn rect(&mut self, x1: i32, y1: i32, x2: i32, y2: i32) {
         for x in x1..=x2 {
             for y in y1..=y2 {
-                self.canvas.set(x, y, self.fill_color);
+                self.canvas.set(x, y, self.fill);
             }
         }
 
-        if self.outline_color == self.fill_color {
+        if self.outline == self.fill {
             return;
         }
 
-        if is_transparent(&self.outline_color) {
+        if is_transparent(&self.outline) {
             return;
         }
 
         for x in x1..=x2 {
-            self.canvas.set(x, y1, self.outline_color);
-            self.canvas.set(x, y2, self.outline_color);
+            self.canvas.set(x, y1, self.outline);
+            self.canvas.set(x, y2, self.outline);
         }
 
         for y in y1..=y2 {
-            self.canvas.set(x1, y, self.outline_color);
-            self.canvas.set(x2, y, self.outline_color);
+            self.canvas.set(x1, y, self.outline);
+            self.canvas.set(x2, y, self.outline);
         }
     }
 
@@ -73,7 +73,7 @@ where
         let mut err = dx - dy;
 
         loop {
-            self.canvas.set(x1, y1, self.outline_color);
+            self.canvas.set(x1, y1, self.outline);
 
             if x1 == x2 && y1 == y2 {
                 break;
@@ -107,15 +107,15 @@ where
 
                 let d2 = dx * dx + dy * dy;
 
-                if !is_transparent(&self.fill_color) && d2 < r2 {
-                    self.canvas.set(px, py, self.fill_color);
+                if !is_transparent(&self.fill) && d2 < r2 {
+                    self.canvas.set(px, py, self.fill);
                 }
 
-                if !is_transparent(&self.outline_color) {
+                if !is_transparent(&self.outline) {
                     let diff = (d2 - r2).abs();
                     // We're comparing squares so abs difference of 25 is 5 pixels
                     if diff <= 25 {
-                        self.canvas.set(px, py, self.outline_color);
+                        self.canvas.set(px, py, self.outline);
                     }
                 }
             }
